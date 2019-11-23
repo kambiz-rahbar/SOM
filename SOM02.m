@@ -11,14 +11,21 @@ x = X;
 % Create a Self-Organizing Map
 dimension1 = 10;
 dimension2 = 1;
-net = selforgmap([dimension1 dimension2]);
+coverSteps = 100; %number of training steps for initial covering of the input space (default = 100)
+initNeighbor = 3; %initial neighborhood size (default = 3)
+topologyFcn = 'hextop'; % 'gridtop', 'randtop', 'tritop' (default = 'hextop')
+distanceFcn = 'linkdist'; % 'boxdist', 'dist', 'linkdist', 'mandist' (default = 'linkdist')
+net = selforgmap([dimension1 dimension2], coverSteps, initNeighbor, topologyFcn, distanceFcn);
 
 % Choose Plot Functions
 % For a list of all plot functions type: help nnplot
-net.plotFcns = {'plotsomtop','plotsomnc','plotsomnd', ...
-    'plotsomplanes', 'plotsomhits', 'plotsompos'};
+net.plotFcns = {'plotsomtop', 'plotsomnc', 'plotsomnd', 'plotsomplanes', 'plotsomhits', 'plotsompos'};
 
 % Train the Network
+net.trainParam.showWindow = 1;
+net.trainParam.showCommandLine = 1;
+net.trainParam.show = 10;
+net.trainParam.epochs = 1000;
 [net,tr] = train(net,x);
 
 % Test the Network
@@ -33,7 +40,7 @@ view(net)
 %figure, plotsomnc(net)
 %figure, plotsomnd(net)
 %figure, plotsomplanes(net)
-%figure, plotsomhits(net,x)
+figure, plotsomhits(net,x)
 figure, plotsompos(net,x)
 
 %% cluster data
